@@ -63,12 +63,26 @@ function writeToDom (strang){
 	var seasonalSales = document.getElementById("seasonal-sales");
 	seasonalSales.innerHTML += strang;
 }
+//defining selector for discounts
+var seasonalDeals = document.getElementById("seasonalDeals");
 
-//Autumn
+function discountPrice (){
+	console.log(products);
+	console.log("k")
+	for (var i = 0; i < products.length; i++) {
+		var totalPrice = products[i].price - (products[i].price * products[i].categoryDiscount)
+		console.log(totalPrice.toFixed(2));
 
-//Spring
+	}
+}
 
-//Winter
+seasonalDeals.addEventListener("change", function(event){
+	console.log(seasonalDeals.value);
+	if(seasonalDeals.value === "spring"){
+		console.log("k")
+		discountPrice()
+	}
+})
 
 
 function executeThisCodeAfterFileLoads(){
