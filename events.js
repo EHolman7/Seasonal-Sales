@@ -40,6 +40,7 @@ function addCategoryToProduct(){
 				products[i].categoryName = categories[j].name;
 				products[i].categorySeason = categories[j]["season_discount"];
 				products[i].categoryDiscount = categories[j].discount;
+				products[i].discountPrice = products[i].price - (products[i].price * products[i].categoryDiscount);
 			}
 		}
 	}
@@ -50,36 +51,56 @@ function addCategoryToProduct(){
 function prodString (products){
 	var domString = '';
 	for (var i = 0; i < products.length; i++){
+		console.log("money", products[i].categorySeason, seasonVar);
 		domString += `<div id="prodCard">`;
 		domString +=	`<h4 class="department">${products[i].categoryName}</h4>`;
 		domString +=	`<h4 class="name">${products[i].name}</h4>`;
-		domString +=	`<h4 class="price">${products[i].price}</h4>`;
+		if(products[i].categorySeason === seasonVar){
+			domString += 	`<h4 class="price">${products[i].discountPrice.toFixed(2)}</h4>`;
+		}else 	{
+			domString +=	`<h4 class="price">${products[i].price}</h4>`;
+		}
 		domString += `</div>`;
 	}
 	writeToDom(domString);
 }
-
+//making seasonalSales global
+var seasonalSales = document.getElementById("seasonal-sales");
 function writeToDom (strang){
-	var seasonalSales = document.getElementById("seasonal-sales");
+	
 	seasonalSales.innerHTML += strang;
 }
 //defining selector for discounts
 var seasonalDeals = document.getElementById("seasonalDeals");
 
+// setting global variable to select season
+var seasonVar = "";
+
+function resetDom () {
+  seasonalSales.innerHTML = '';
+}
+
+//function for discounted price
 function discountPrice (){
 	console.log(products);
 	console.log("k")
-	for (var i = 0; i < products.length; i++) {
-		var totalPrice = products[i].price - (products[i].price * products[i].categoryDiscount)
-		console.log(totalPrice.toFixed(2));
-
-	}
+	//puting this guy here to run only on discountPrice function and not the loop
+	resetDom();
+	prodString(products);
 }
-
+//event listener to change to that season
 seasonalDeals.addEventListener("change", function(event){
 	console.log(seasonalDeals.value);
 	if(seasonalDeals.value === "spring"){
+		//defining seasonVar from categories.json
+		seasonVar = "Spring";
 		console.log("k")
+		discountPrice()
+	}else if (seasonalDeals.value === "autumn"){
+		seasonVar = "Autumn"
+		discountPrice()
+	}else if (seasonalDeals.value === "winter"){
+		seasonVar = "Winter"
 		discountPrice()
 	}
 })
